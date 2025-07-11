@@ -3,17 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aventura de Vocabulário</title>
+    <title>Aventura de Vocabulário Divertida</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-    </head>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
 <body>
-    <div class="background-elements">
-        <div class="bg-shape shape-1"></div>
-        <div class="bg-shape shape-2"></div>
-        <div class="bg-shape shape-3"></div>
+    <div class="sparkle-background">
+        <div class="sparkle s1"></div>
+        <div class="sparkle s2"></div>
+        <div class="sparkle s3"></div>
+        <div class="sparkle s4"></div>
+        <div class="sparkle s5"></div>
+
+        <div class="fun-shape shape-top-left"></div>
+        <div class="fun-shape shape-bottom-right"></div>
+        <div class="fun-shape shape-middle-left"></div>
     </div>
 
     <div id="game-container">
@@ -35,8 +41,10 @@
 
     <div id="completion-modal" class="hidden">
         <div class="modal-content">
+            <div class="modal-fun-element"></div>
             <div id="modal-emoji">🎉</div>
-            <h2 class="modal-title">Rodada Completa!</h2> <p id="final-score"></p>
+            <h2 class="modal-title">Rodada Completa!</h2>
+            <p id="final-score"></p>
             <button id="play-again-button">Jogar Novamente</button>
         </div>
     </div>
