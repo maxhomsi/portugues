@@ -1,62 +1,130 @@
 :root {
-    --bg-color: #f0f4f8;
-    --primary-blue: #4a90e2;
-    --primary-green: #50e3c2;
-    --dark-green: #38a892;
-    --primary-red: #e95d5d;
-    --dark-red: #c34141;
+    /* Labubu-inspired Colors */
+    --labubu-primary: #FF5722; /* Vibrant Orange/Red */
+    --labubu-secondary: #FFC107; /* Bright Yellow */
+    --labubu-accent: #673AB7; /* Deep Purple (for contrast/details) */
+    --labubu-light-blue: #2196F3; /* Playful Blue */
+    --labubu-green: #4CAF50; /* Fresh Green for correct */
+
+    --bg-color-light: #f7f9fc; /* Softer light background */
+    --bg-color-dark: #e0e6ed; /* Slightly darker areas */
     --text-dark: #333;
     --text-light: #fff;
-    --font-family: 'Nunito', sans-serif;
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --shadow-strong: rgba(0, 0, 0, 0.25);
+
+    --font-family: 'Nunito', sans-serif; /* Good playful font */
 }
 
 body {
     font-family: var(--font-family);
-    background-color: var(--bg-color);
+    background: linear-gradient(135deg, var(--bg-color-light), var(--bg-color-dark)); /* Gentle gradient */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     margin: 0;
+    overflow: hidden; /* Hide overflowing background shapes */
     -webkit-tap-highlight-color: transparent;
+    position: relative; /* For background elements positioning */
 }
 
-#game-container {
+/* --- Playful Background Elements (Labubu-like blobs/shapes) --- */
+.background-elements {
+    position: absolute;
     width: 100%;
-    max-width: 500px;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0; /* Behind the game container */
+}
+
+.bg-shape {
+    position: absolute;
+    border-radius: 50%; /* Circular or blob-like shapes */
+    opacity: 0.3;
+    filter: blur(50px); /* Soft blur to make them feel like light/color fields */
+    animation: float 20s infinite ease-in-out alternate;
+}
+
+.shape-1 {
+    width: 300px;
+    height: 300px;
+    background-color: var(--labubu-primary);
+    top: -50px;
+    left: -80px;
+    animation-delay: 0s;
+}
+
+.shape-2 {
+    width: 400px;
+    height: 400px;
+    background-color: var(--labubu-secondary);
+    bottom: -100px;
+    right: -120px;
+    animation-delay: 5s;
+}
+
+.shape-3 {
+    width: 250px;
+    height: 250px;
+    background-color: var(--labubu-light-blue);
+    top: 50%;
+    left: -100px;
+    transform: translateY(-50%);
+    animation-delay: 10s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(20px, 30px) scale(1.05); }
+    50% { transform: translate(-10px, -20px) scale(0.95); }
+    75% { transform: translate(15px, -5px) scale(1.02); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+
+#game-container {
+    width: 90%; /* More responsive width */
+    max-width: 550px; /* Slightly larger max-width */
     background: var(--text-light);
-    border-radius: 24px;
-    padding: 2rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border-radius: 30px; /* More rounded */
+    padding: 2.5rem; /* More generous padding */
+    box-shadow: 0 15px 50px var(--shadow-medium); /* Deeper shadow */
     box-sizing: border-box;
-    margin: 1rem;
+    margin: 1.5rem; /* More margin */
+    position: relative; /* For z-index over shapes */
+    z-index: 1; /* Make sure it's above the background shapes */
+    border: 3px solid var(--labubu-accent); /* A fun border! */
 }
 
 #game-header {
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
 }
 
 #progress-container {
     width: 100%;
-    height: 16px;
-    background-color: #e0e0e0;
-    border-radius: 8px;
+    height: 20px; /* Thicker progress bar */
+    background-color: var(--bg-color-dark); /* Slightly different background */
+    border-radius: 10px;
     overflow: hidden;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
 }
 
 #progress-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, #ffd33d, #ffa000);
-    border-radius: 8px;
-    transition: width 0.3s ease-in-out;
+    background: linear-gradient(90deg, var(--labubu-secondary), var(--labubu-primary)); /* Labubu gradient */
+    border-radius: 10px;
+    transition: width 0.4s ease-out; /* Smoother transition */
 }
 
 #question-counter {
     text-align: center;
-    margin-top: 0.5rem;
-    color: #888;
+    margin-top: 0.8rem;
+    color: var(--text-dark); /* Stronger color */
     font-weight: 700;
+    font-size: 1.1rem; /* Slightly larger font */
 }
 
 #game-main {
@@ -64,81 +132,106 @@ body {
 }
 
 #emoji-display {
-    font-size: 7rem;
+    font-size: 8rem; /* Larger emoji */
     line-height: 1;
-    margin: 1rem 0;
-    animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-@keyframes pop-in {
-    0% { transform: scale(0.5); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
+    margin: 1.5rem 0 1rem; /* Adjust margin */
+    /* Pop-in animation is great, keep it! */
 }
 
 #feedback-text {
-    font-size: 1.5rem;
+    font-size: 1.8rem; /* Larger feedback text */
     font-weight: 900;
-    min-height: 40px;
-    margin-bottom: 1.5rem;
+    min-height: 50px; /* More space for feedback */
+    margin-bottom: 2rem;
+    color: var(--labubu-accent); /* Make feedback stand out */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 #options-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem;
+    gap: 1.5rem; /* Larger gap for buttons */
 }
 
 .option-button {
-    background-color: var(--primary-blue);
+    background-color: var(--labubu-light-blue); /* New playful blue */
     color: var(--text-light);
     border: none;
-    border-radius: 12px;
-    padding: 1.25rem 1rem;
-    font-size: 1.25rem;
-    font-weight: 700;
+    border-radius: 15px; /* More rounded buttons */
+    padding: 1.5rem 1rem; /* More padding */
+    font-size: 1.35rem; /* Larger text on buttons */
+    font-weight: 800; /* Bolder text */
     font-family: var(--font-family);
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 0 #3a75c4;
+    transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.2s; /* Springier transition */
+    box-shadow: 0 6px 0 var(--labubu-accent); /* Deeper shadow with accent color */
+    letter-spacing: 0.5px; /* Slightly more spaced letters */
 }
 
 .option-button:hover:not(:disabled) {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 0 #3a75c4;
+    transform: translateY(-5px); /* More pronounced lift */
+    box-shadow: 0 10px 0 var(--labubu-accent); /* Deeper shadow on hover */
 }
 
 .option-button:active:not(:disabled) {
     transform: translateY(2px);
-    box-shadow: 0 2px 0 #3a75c4;
+    box-shadow: 0 2px 0 var(--labubu-accent); /* Smaller shadow when pressed */
 }
 
 .option-button:disabled {
     cursor: not-allowed;
-    opacity: 0.8;
+    opacity: 0.7; /* Slightly less opaque */
+    background-color: #cccccc; /* Neutral disabled color */
+    box-shadow: 0 4px 0 #999999;
 }
 
 .option-button.correct {
-    background-color: var(--primary-green);
-    box-shadow: 0 4px 0 var(--dark-green);
-    animation: pulse 0.5s;
+    background-color: var(--labubu-green); /* Labubu green */
+    box-shadow: 0 6px 0 darken(var(--labubu-green), 15%); /* Darken for shadow */
+    animation: pulse 0.6s ease-out; /* Smoother pulse */
 }
 
 .option-button.incorrect {
-    background-color: var(--primary-red);
-    box-shadow: 0 4px 0 var(--dark-red);
-    animation: shake 0.5s;
+    background-color: var(--labubu-primary); /* Labubu primary for incorrect */
+    box-shadow: 0 6px 0 darken(var(--labubu-primary), 15%); /* Darken for shadow */
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; /* More energetic shake */
 }
+
+/* Darken function for CSS variables - not native CSS, typically handled by preprocessors.
+   For plain CSS, you'd calculate and define these in your :root or directly:
+   Example: --dark-labubu-green: #388E3C; */
+/* For plain CSS, manually define the darken values: */
+:root {
+    /* ... existing vars ... */
+    --dark-labubu-green: #388E3C; /* Darkened #4CAF50 */
+    --dark-labubu-primary: #D32F2F; /* Darkened #FF5722 */
+}
+
+.option-button.correct {
+    background-color: var(--labubu-green);
+    box-shadow: 0 6px 0 var(--dark-labubu-green);
+    animation: pulse 0.6s ease-out;
+}
+
+.option-button.incorrect {
+    background-color: var(--labubu-primary);
+    box-shadow: 0 6px 0 var(--dark-labubu-primary);
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
 
 @keyframes pulse {
     0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+    50% { transform: scale(1.08); } /* Slightly bigger pulse */
     100% { transform: scale(1); }
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-5px); }
-    75% { transform: translateX(5px); }
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+    50% { transform: translateX(-4px); }
 }
 
 /* Completion Modal Styles */
@@ -154,7 +247,8 @@ body {
     align-items: center;
     z-index: 100;
     opacity: 1;
-    transition: opacity 0.3s;
+    transition: opacity 0.3s ease-in-out;
+    backdrop-filter: blur(5px); /* Nice touch for modals */
 }
 
 #completion-modal.hidden {
@@ -163,38 +257,109 @@ body {
 }
 
 .modal-content {
-    background: var(--text-light);
-    padding: 2.5rem;
-    border-radius: 20px;
+    background: linear-gradient(160deg, var(--labubu-secondary), var(--labubu-primary)); /* Gradient modal background */
+    padding: 3rem; /* More padding */
+    border-radius: 25px; /* More rounded */
     text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    box-shadow: 0 10px 30px var(--shadow-strong); /* Stronger shadow */
     transform: scale(0.9);
-    animation: pop-in 0.3s forwards;
+    animation: pop-in 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards; /* Springier pop-in */
+    color: var(--text-light); /* Light text on dark background */
+    border: 4px solid var(--labubu-accent); /* Accent border */
+}
+
+.modal-content .modal-title { /* Targeting the new class */
+    font-size: 2.5rem; /* Larger title */
+    font-weight: 900;
+    margin-top: 0.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
 }
 
 #modal-emoji {
-    font-size: 4rem;
+    font-size: 5rem; /* Larger emoji */
+    margin-bottom: 1rem;
+    animation: bounce 1s infinite; /* Continuous bounce for the emoji */
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
 }
 
 #final-score {
-    font-size: 1.5rem;
-    color: #555;
-    margin: 1rem 0 2rem;
+    font-size: 1.8rem; /* Larger score */
+    color: var(--text-light);
+    margin: 1.5rem 0 2.5rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 #play-again-button {
-    background-color: var(--primary-blue);
+    background-color: var(--labubu-light-blue); /* Consistent with button style */
     color: var(--text-light);
     border: none;
-    padding: 1rem 2.5rem;
-    font-size: 1.2rem;
+    padding: 1.2rem 3rem; /* More padding */
+    font-size: 1.3rem; /* Larger font */
     font-family: var(--font-family);
-    font-weight: 700;
-    border-radius: 12px;
+    font-weight: 800; /* Bolder */
+    border-radius: 15px; /* Consistent roundedness */
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.2s;
+    box-shadow: 0 6px 0 var(--labubu-accent); /* Accent color shadow */
 }
 
 #play-again-button:hover {
-    transform: scale(1.05);
+    transform: translateY(-4px); /* Lift on hover */
+    box-shadow: 0 10px 0 var(--labubu-accent);
+}
+
+#play-again-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 var(--labubu-accent);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 600px) {
+    #game-container {
+        margin: 0.5rem;
+        padding: 1.5rem;
+        border-radius: 20px;
+    }
+
+    #options-grid {
+        grid-template-columns: 1fr; /* Stack buttons on smaller screens */
+    }
+
+    .option-button {
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+
+    #emoji-display {
+        font-size: 6rem;
+    }
+
+    #feedback-text {
+        font-size: 1.4rem;
+        min-height: 40px;
+    }
+
+    .modal-content {
+        padding: 2rem;
+        border-radius: 20px;
+        margin: 1rem; /* Prevent it from touching screen edges */
+    }
+
+    .modal-content .modal-title {
+        font-size: 2rem;
+    }
+
+    #final-score {
+        font-size: 1.4rem;
+    }
+
+    #play-again-button {
+        padding: 1rem 2rem;
+        font-size: 1.1rem;
+    }
 }

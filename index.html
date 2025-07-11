@@ -8,8 +8,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
-</head>
+    </head>
 <body>
+    <div class="background-elements">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+
     <div id="game-container">
         <header id="game-header">
             <div id="progress-container">
@@ -22,7 +28,7 @@
             <div id="emoji-display"></div>
             <div id="feedback-text"></div>
         </main>
-        
+
         <div id="options-grid">
             </div>
     </div>
@@ -30,8 +36,7 @@
     <div id="completion-modal" class="hidden">
         <div class="modal-content">
             <div id="modal-emoji">🎉</div>
-            <h2>Rodada Completa!</h2>
-            <p id="final-score"></p>
+            <h2 class="modal-title">Rodada Completa!</h2> <p id="final-score"></p>
             <button id="play-again-button">Jogar Novamente</button>
         </div>
     </div>
