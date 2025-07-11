@@ -1,196 +1,164 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Configuration ---
-    const PIXABAY_API_KEY = "51279356-8ede9ce0a111090e4db27622d"; // ⚠️ PASTE YOUR KEY HERE
-    const QUESTIONS_PER_GAME = 10;
 
+    // --- VOCABULARY LIST (50 words) ---
+    const vocabulary = [
+        { emoji: '🍎', word: 'maçã' }, { emoji: '🐶', word: 'cachorro' }, { emoji: '☀️', word: 'sol' },
+        { emoji: '🐱', word: 'gato' }, { emoji: '📖', word: 'livro' }, { emoji: '🚗', word: 'carro' },
+        { emoji: '🏠', word: 'casa' }, { emoji: '🌸', word: 'flor' }, { emoji: '⚽️', word: 'bola' },
+        { emoji: '⭐', word: 'estrela' }, { emoji: '🍌', word: 'banana' }, { emoji: '🐘', word: 'elefante' },
+        { emoji: '🌙', word: 'lua' }, { emoji: '🦁', word: 'leão' }, { emoji: '🍓', word: 'morango' },
+        { emoji: '🚲', word: 'bicicleta' }, { emoji: '🌳', word: 'árvore' }, { emoji: '🌊', word: 'onda' },
+        { emoji: '🐠', word: 'peixe' }, { emoji: '🐸', word: 'sapo' }, { emoji: '🍇', word: 'uva' },
+        { emoji: '🔥', word: 'fogo' }, { emoji: '⏰', word: 'relógio' }, { emoji: '🔑', word: 'chave' },
+        { emoji: '👑', word: 'coroa' }, { emoji: '🐧', word: 'pinguim' }, { emoji: '🍕', word: 'pizza' },
+        { emoji: '🎈', word: 'balão' }, { emoji: '🎸', word: 'violão' }, { emoji: '🚀', word: 'foguete' },
+        { emoji: '🐢', word: 'tartaruga' }, { emoji: '🌵', word: 'cacto' }, { emoji: '💎', word: 'diamante' },
+        { emoji: '🍩', word: 'rosquinha' }, { emoji: '👻', word: 'fantasma' }, { emoji: '🌍', word: 'terra' },
+        { emoji: '🚁', word: 'helicóptero' }, { emoji: '🍔', word: 'hambúrguer' }, { emoji: '💡', word: 'lâmpada' },
+        { emoji: '🎁', word: 'presente' }, { emoji: '🐞', word: 'joaninha' }, { emoji: '🍄', word: 'cogumelo' },
+        { emoji: '🤖', word: 'robô' }, { emoji: '🌈', word: 'arco-íris' }, { emoji: '🥪', word: 'sanduíche' },
+        { emoji: '🌻', word: 'girassol' }, { emoji: '💻', word: 'computador' }, { emoji: '🦓', word: 'zebra' },
+        { emoji: '⛵️', word: 'barco' }, { emoji: '🦋', word: 'borboleta' }
+    ];
+
+    const QUESTIONS_PER_ROUND = 10;
+    
     // --- DOM Elements ---
-    const setupScreen = document.getElementById('setup-screen');
-    const gameScreen = document.getElementById('game-screen');
-    const wordInput = document.getElementById('word-input');
-    const startGameButton = document.getElementById('start-game-button');
-    const loadingMessage = document.getElementById('loading-message');
-    
-    const imageContainer = document.getElementById('image-container');
-    const optionsContainer = document.getElementById('options-container');
-    const feedbackMessage = document.getElementById('feedback-message');
-    const scoreElement = document.getElementById('score');
-    
-    const gameArea = document.getElementById('game-area');
-    const completionScreen = document.getElementById('completion-screen');
-    const finalScoreMessage = document.getElementById('final-score-message');
-    const restartButton = document.getElementById('restart-button');
+    const progressBar = document.getElementById('progress-bar');
+    const questionCounter = document.getElementById('question-counter');
+    const emojiDisplay = document.getElementById('emoji-display');
+    const feedbackText = document.getElementById('feedback-text');
+    const optionsGrid = document.getElementById('options-grid');
+    const completionModal = document.getElementById('completion-modal');
+    const finalScoreEl = document.getElementById('final-score');
+    const playAgainButton = document.getElementById('play-again-button');
 
     // --- Game State ---
-    let vocabulary = [];
     let score = 0;
     let currentQuestionIndex = 0;
-    
-    // --- Sound Effects ---
-    const correctSound = new Audio('https://actions.google.com/sounds/v1/cartoon/positive_bling.ogg');
-    const incorrectSound = new Audio('https://actions.google.com/sounds/v1/cartoon/negative_beeps.ogg');
+    let sessionWords = [];
+    let currentCorrectWord = '';
+    let isAnswering = false;
 
-    /**
-     * Fetches an image URL from Pixabay for a given word.
-     * We'll ask for child-friendly "illustrations".
-     */
-    async function fetchImageForWord(word) {
-        const url = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(word)}&image_type=illustration&safesearch=true&lang=pt`;
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.hits && data.hits.length > 0) {
-                return data.hits[0].webformatURL; // Use the first image found
-            }
-            return null; // No image found
-        } catch (error) {
-            console.error("Error fetching image:", error);
-            return null;
+    /** Shuffles an array in place */
+    const shuffleArray = (array) => {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
-    }
+    };
 
-    /**
-     * Prepares and starts the game.
-     */
-    async function initializeGame() {
-        if (!PIXABAY_API_KEY || PIXABAY_API_KEY === "YOUR_PIXABAY_API_KEY") {
-            alert("Por favor, adicione sua chave da API da Pixabay no arquivo script.js!");
-            return;
-        }
-
-        setupScreen.style.display = 'none';
-        loadingMessage.classList.remove('hidden');
-
-        const words = wordInput.value.split('\n').map(w => w.trim()).filter(w => w.length > 0);
-        if (words.length < 3) {
-            alert("Por favor, insira pelo menos 3 palavras para jogar.");
-            setupScreen.style.display = 'block';
-            loadingMessage.classList.add('hidden');
-            return;
-        }
-
-        // Build the vocabulary by fetching an image for each word
-        const vocabPromises = words.map(async word => {
-            const imageUrl = await fetchImageForWord(word);
-            if (imageUrl) { // Only add words for which we found an image
-                return { word: word, image: imageUrl };
-            }
-            return null;
-        });
-
-        // Wait for all images to be fetched
-        const resolvedVocab = await Promise.all(vocabPromises);
-        vocabulary = resolvedVocab.filter(item => item !== null); // Filter out any nulls
-
-        if (vocabulary.length < 3) {
-            alert("Não foi possível encontrar imagens suficientes para as palavras fornecidas. Tente palavras diferentes.");
-            setupScreen.style.display = 'block';
-            loadingMessage.classList.add('hidden');
-            return;
-        }
-
-        loadingMessage.classList.add('hidden');
-        gameScreen.classList.remove('hidden');
-        startGame();
-    }
-
-    /**
-     * Resets state and starts a new game round.
-     */
-    const startGame = () => {
+    /** Starts a new round */
+    const startRound = () => {
         score = 0;
         currentQuestionIndex = 0;
-        scoreElement.textContent = score;
+        isAnswering = false;
+        completionModal.classList.add('hidden');
         
-        // Shuffle the loaded vocabulary
-        vocabulary.sort(() => Math.random() - 0.5);
-
-        gameArea.classList.remove('hidden');
-        completionScreen.classList.add('hidden');
+        shuffleArray(vocabulary);
+        sessionWords = vocabulary.slice(0, QUESTIONS_PER_ROUND);
         
         loadNextQuestion();
     };
-    
-    const loadNextQuestion = () => {
-        // Use Math.min to not exceed the number of available words
-        const gameLength = Math.min(vocabulary.length, QUESTIONS_PER_GAME);
 
-        if (currentQuestionIndex >= gameLength) {
-            endGame();
+    /** Loads the next question or ends the round */
+    const loadNextQuestion = () => {
+        if (currentQuestionIndex >= QUESTIONS_PER_ROUND) {
+            endRound();
             return;
         }
-
-        feedbackMessage.textContent = '';
-        const currentItem = vocabulary[currentQuestionIndex];
         
-        // Display image from URL
-        imageContainer.innerHTML = `<img src="${currentItem.image}" alt="${currentItem.word}" style="width:150px; height:150px; border-radius:10px; object-fit:cover;">`;
+        isAnswering = false;
+        feedbackText.textContent = '';
+        const currentItem = sessionWords[currentQuestionIndex];
+        currentCorrectWord = currentItem.word;
+        
+        // Update UI
+        updateProgress();
+        emojiDisplay.textContent = currentItem.emoji;
+        emojiDisplay.style.animation = 'pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+        setTimeout(() => emojiDisplay.style.animation = '', 500);
 
-        const options = generateOptions(currentItem.word);
-        optionsContainer.innerHTML = '';
+        // Generate and display options
+        const options = generateOptions(currentCorrectWord);
+        optionsGrid.innerHTML = '';
         options.forEach(option => {
             const button = document.createElement('button');
+            button.className = 'option-button';
             button.textContent = option;
-            button.onclick = () => checkAnswer(option, currentItem.word);
-            optionsContainer.appendChild(button);
+            button.onclick = () => selectAnswer(option, button);
+            optionsGrid.appendChild(button);
         });
     };
-
+    
+    /** Generates 4 multiple choice options */
     const generateOptions = (correctAnswer) => {
         let options = [correctAnswer];
-        while (options.length < 3) {
+        while (options.length < 4) {
             const randomItem = vocabulary[Math.floor(Math.random() * vocabulary.length)];
             if (!options.includes(randomItem.word)) {
                 options.push(randomItem.word);
             }
         }
-        return options.sort(() => Math.random() - 0.5);
+        shuffleArray(options);
+        return options;
     };
 
-    const checkAnswer = (selectedWord, correctWord) => {
-        document.querySelectorAll('#options-container button').forEach(btn => btn.disabled = true);
+    /** Handles user's answer selection */
+    const selectAnswer = (selectedWord, buttonElement) => {
+        if (isAnswering) return;
+        isAnswering = true;
+        
+        document.querySelectorAll('.option-button').forEach(btn => btn.disabled = true);
 
-        if (selectedWord === correctWord) {
-            feedbackMessage.textContent = "Muito bem!";
-            feedbackMessage.className = 'correct';
+        if (selectedWord === currentCorrectWord) {
             score++;
-            scoreElement.textContent = score;
-            correctSound.play();
-            speak(correctWord);
+            buttonElement.classList.add('correct');
+            feedbackText.textContent = 'Muito bem!';
+            feedbackText.style.color = 'var(--primary-green)';
+            speak(currentCorrectWord);
         } else {
-            feedbackMessage.textContent = "Tente novamente!";
-            feedbackMessage.className = 'incorrect';
-            incorrectSound.play();
+            buttonElement.classList.add('incorrect');
+            feedbackText.textContent = `É "${currentCorrectWord}"`;
+            feedbackText.style.color = 'var(--primary-red)';
+            // Highlight the correct answer
+            document.querySelectorAll('.option-button').forEach(btn => {
+                if (btn.textContent === currentCorrectWord) {
+                    btn.classList.add('correct');
+                }
+            });
         }
-
-        setTimeout(() => {
-            currentQuestionIndex++;
-            loadNextQuestion();
-        }, 1800);
+        
+        currentQuestionIndex++;
+        setTimeout(loadNextQuestion, 2000);
     };
 
+    /** Updates the progress bar and counter */
+    const updateProgress = () => {
+        const progressPercent = (currentQuestionIndex / QUESTIONS_PER_ROUND) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+        questionCounter.textContent = `Questão ${currentQuestionIndex + 1} de ${QUESTIONS_PER_ROUND}`;
+    };
+
+    /** Shows the final score screen */
+    const endRound = () => {
+        finalScoreEl.textContent = `Sua pontuação: ${score} de ${QUESTIONS_PER_ROUND}`;
+        completionModal.classList.remove('hidden');
+    };
+
+    /** Uses SpeechSynthesis to pronounce the word */
     const speak = (text) => {
         if ('speechSynthesis' in window) {
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'pt-BR';
+            utterance.rate = 0.9;
             window.speechSynthesis.speak(utterance);
         }
     };
     
-    const endGame = () => {
-        const gameLength = Math.min(vocabulary.length, QUESTIONS_PER_GAME);
-        gameArea.classList.add('hidden');
-        completionScreen.classList.remove('hidden');
-        finalScoreMessage.textContent = `Sua pontuação final é ${score} de ${gameLength}!`;
-    };
-
-    const returnToSetup = () => {
-        gameScreen.classList.add('hidden');
-        completionScreen.classList.add('hidden');
-        setupScreen.style.display = 'block';
-        wordInput.value = ''; // Clear previous words
-    };
-
     // --- Event Listeners ---
-    startGameButton.addEventListener('click', initializeGame);
-    restartButton.addEventListener('click', returnToSetup);
+    playAgainButton.addEventListener('click', startRound);
+
+    // --- Initial Game Start ---
+    startRound();
 });

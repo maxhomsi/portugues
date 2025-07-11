@@ -1,147 +1,200 @@
-@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto&display=swap');
+:root {
+    --bg-color: #f0f4f8;
+    --primary-blue: #4a90e2;
+    --primary-green: #50e3c2;
+    --dark-green: #38a892;
+    --primary-red: #e95d5d;
+    --dark-red: #c34141;
+    --text-dark: #333;
+    --text-light: #fff;
+    --font-family: 'Nunito', sans-serif;
+}
 
-/* --- General Body and Container --- */
 body {
-    font-family: 'Roboto', sans-serif;
+    font-family: var(--font-family);
+    background-color: var(--bg-color);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #a8e063, #56ab2f);
     margin: 0;
-    padding: 1rem;
-    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
-.game-container {
-    text-align: center;
-    background-color: #ffffff;
+#game-container {
+    width: 100%;
+    max-width: 500px;
+    background: var(--text-light);
+    border-radius: 24px;
     padding: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    max-width: 450px;
-}
-
-h1 {
-    font-family: 'Fredoka One', cursive;
-    color: #3e8e41;
-    margin-top: 0;
-}
-
-.hidden {
-    display: none;
-}
-
-/* --- NEW: Setup Screen Styles --- */
-#setup-screen p {
-    color: #555;
-    font-size: 1.1rem;
-}
-
-#word-input {
-    width: 100%;
-    padding: 0.75rem;
-    font-family: 'Roboto', sans-serif;
-    font-size: 1rem;
-    border: 2px solid #ddd;
-    border-radius: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     box-sizing: border-box;
-    margin-bottom: 1rem;
+    margin: 1rem;
 }
 
-#start-game-button {
+#game-header {
+    margin-bottom: 1.5rem;
+}
+
+#progress-container {
     width: 100%;
-    padding: 0.8rem 1.5rem;
-    font-size: 1.2rem;
-    font-family: 'Fredoka One', cursive;
-    cursor: pointer;
-    border: none;
-    border-radius: 10px;
-    background-color: #ff9800;
-    color: white;
-    transition: background-color 0.2s;
+    height: 16px;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
-#start-game-button:hover {
-    background-color: #e68900;
+#progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ffd33d, #ffa000);
+    border-radius: 8px;
+    transition: width 0.3s ease-in-out;
 }
 
-#loading-message {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #3e8e41;
-    margin-top: 1.5rem;
+#question-counter {
+    text-align: center;
+    margin-top: 0.5rem;
+    color: #888;
+    font-weight: 700;
 }
 
+#game-main {
+    text-align: center;
+}
 
-/* --- Game Area Styles (Mostly Unchanged) --- */
-#image-container {
+#emoji-display {
+    font-size: 7rem;
+    line-height: 1;
     margin: 1rem 0;
-    height: 150px;
+    animation: pop-in 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+
+@keyframes pop-in {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#feedback-text {
+    font-size: 1.5rem;
+    font-weight: 900;
+    min-height: 40px;
+    margin-bottom: 1.5rem;
+}
+
+#options-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.option-button {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border: none;
+    border-radius: 12px;
+    padding: 1.25rem 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    font-family: var(--font-family);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 0 #3a75c4;
+}
+
+.option-button:hover:not(:disabled) {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 0 #3a75c4;
+}
+
+.option-button:active:not(:disabled) {
+    transform: translateY(2px);
+    box-shadow: 0 2px 0 #3a75c4;
+}
+
+.option-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+.option-button.correct {
+    background-color: var(--primary-green);
+    box-shadow: 0 4px 0 var(--dark-green);
+    animation: pulse 0.5s;
+}
+
+.option-button.incorrect {
+    background-color: var(--primary-red);
+    box-shadow: 0 4px 0 var(--dark-red);
+    animation: shake 0.5s;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Completion Modal Styles */
+#completion-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.3s;
 }
 
-#options-container button {
-    display: block;
-    width: 100%;
-    padding: 1rem;
-    margin: 0.75rem 0;
+#completion-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: var(--text-light);
+    padding: 2.5rem;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transform: scale(0.9);
+    animation: pop-in 0.3s forwards;
+}
+
+#modal-emoji {
+    font-size: 4rem;
+}
+
+#final-score {
     font-size: 1.5rem;
-    font-family: 'Fredoka One', cursive;
-    cursor: pointer;
-    border: none;
-    border-radius: 12px;
-    background-color: #4CAF50;
-    color: white;
-    transition: transform 0.2s, background-color 0.2s;
-    border-bottom: 5px solid #3e8e41;
-}
-
-#options-container button:hover {
-    background-color: #45a049;
-    transform: translateY(-3px);
-}
-
-#options-container button:active {
-    transform: translateY(1px);
-    border-bottom-width: 2px;
-}
-
-/* --- Feedback and Score Styles (Unchanged) --- */
-#feedback-message {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 1rem 0;
-    min-height: 30px;
-}
-
-.correct {
-    color: #3e8e41;
-}
-
-.incorrect {
-    color: #d32f2f;
-}
-
-#score-container {
-    font-size: 1.2rem;
     color: #555;
-    margin-top: 1rem;
+    margin: 1rem 0 2rem;
 }
 
-/* --- Completion Screen Styles (Unchanged) --- */
-#completion-screen h2 {
-    font-family: 'Fredoka One', cursive;
-    color: #56ab2f;
-}
-
-#restart-button {
-    padding: 0.8rem 1.5rem;
-    font-size: 1.2rem;
-    font-family: 'Fredoka One', cursive;
-    cursor: pointer;
+#play-again-button {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
     border: none;
+    padding: 1rem 2.5rem;
+    font-size: 1.2rem;
+    font-family: var(--font-family);
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+#play-again-button:hover {
+    transform: scale(1.05);
 }

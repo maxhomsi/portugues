@@ -3,46 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerador de Jogo de Vocabulário</title>
+    <title>Aventura de Vocabulário</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <main class="game-container">
-        <div id="setup-screen">
-            <h1>Crie seu Jogo!</h1>
-            <p>Cole sua lista de palavras em português (uma por linha):</p>
-            <textarea id="word-input" rows="10" placeholder="maçã&#10;cachorro&#10;sol&#10;gato&#10;livro"></textarea>
-            <button id="start-game-button">Criar e Jogar!</button>
-            <div id="loading-message" class="hidden">Carregando imagens... 👨‍🎨</div>
+    <div id="game-container">
+        <header id="game-header">
+            <div id="progress-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="question-counter">Questão 1 de 10</div>
+        </header>
+
+        <main id="game-main">
+            <div id="emoji-display"></div>
+            <div id="feedback-text"></div>
+        </main>
+        
+        <div id="options-grid">
+            </div>
+    </div>
+
+    <div id="completion-modal" class="hidden">
+        <div class="modal-content">
+            <div id="modal-emoji">🎉</div>
+            <h2>Rodada Completa!</h2>
+            <p id="final-score"></p>
+            <button id="play-again-button">Jogar Novamente</button>
         </div>
+    </div>
 
-        <div id="game-screen" class="hidden">
-            <header>
-                <h1>Adivinhe a Palavra! 🇧🇷</h1>
-            </header>
-            
-            <section id="game-area">
-                <div id="image-container">
-                    </div>
-
-                <div id="options-container">
-                    </div>
-            </section>
-
-            <section id="feedback-and-score">
-                <div id="feedback-message"></div>
-                <div id="score-container">
-                    Pontuação: <span id="score">0</span>
-                </div>
-            </section>
-
-            <section id="completion-screen" class="hidden">
-                <h2>Parabéns! Você concluiu o jogo!</h2>
-                <p id="final-score-message"></p>
-                <button id="restart-button">Criar Novo Jogo</button>
-            </section>
-        </div>
-    </main>
     <script src="script.js"></script>
 </body>
 </html>
