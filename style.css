@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto&display=swap');
 
+/* --- General Body and Container --- */
 body {
     font-family: 'Roboto', sans-serif;
     display: flex;
@@ -28,10 +29,56 @@ h1 {
     margin-top: 0;
 }
 
+.hidden {
+    display: none;
+}
+
+/* --- NEW: Setup Screen Styles --- */
+#setup-screen p {
+    color: #555;
+    font-size: 1.1rem;
+}
+
+#word-input {
+    width: 100%;
+    padding: 0.75rem;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-sizing: border-box;
+    margin-bottom: 1rem;
+}
+
+#start-game-button {
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    font-family: 'Fredoka One', cursive;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff9800;
+    color: white;
+    transition: background-color 0.2s;
+}
+
+#start-game-button:hover {
+    background-color: #e68900;
+}
+
+#loading-message {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #3e8e41;
+    margin-top: 1.5rem;
+}
+
+
+/* --- Game Area Styles (Mostly Unchanged) --- */
 #image-container {
-    font-size: 6rem; /* Size for emoji */
     margin: 1rem 0;
-    height: 120px;
+    height: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -63,6 +110,7 @@ h1 {
     border-bottom-width: 2px;
 }
 
+/* --- Feedback and Score Styles (Unchanged) --- */
 #feedback-message {
     font-size: 1.5rem;
     font-weight: bold;
@@ -84,10 +132,7 @@ h1 {
     margin-top: 1rem;
 }
 
-.hidden {
-    display: none;
-}
-
+/* --- Completion Screen Styles (Unchanged) --- */
 #completion-screen h2 {
     font-family: 'Fredoka One', cursive;
     color: #56ab2f;
@@ -98,14 +143,4 @@ h1 {
     font-size: 1.2rem;
     font-family: 'Fredoka One', cursive;
     cursor: pointer;
-    border: none;
-    border-radius: 10px;
-    background-color: #ff9800;
-    color: white;
-    margin-top: 1rem;
-    transition: background-color 0.2s;
-}
-
-#restart-button:hover {
-    background-color: #e68900;
-}
+    border: none

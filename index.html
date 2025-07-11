@@ -3,35 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo de Vocabulário em Português</title>
+    <title>Gerador de Jogo de Vocabulário</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main class="game-container">
-        <header>
-            <h1>Adivinhe a Palavra! 🇧🇷</h1>
-        </header>
-        
-        <section id="game-area">
-            <div id="image-container">
+        <div id="setup-screen">
+            <h1>Crie seu Jogo!</h1>
+            <p>Cole sua lista de palavras em português (uma por linha):</p>
+            <textarea id="word-input" rows="10" placeholder="maçã&#10;cachorro&#10;sol&#10;gato&#10;livro"></textarea>
+            <button id="start-game-button">Criar e Jogar!</button>
+            <div id="loading-message" class="hidden">Carregando imagens... 👨‍🎨</div>
+        </div>
+
+        <div id="game-screen" class="hidden">
+            <header>
+                <h1>Adivinhe a Palavra! 🇧🇷</h1>
+            </header>
+            
+            <section id="game-area">
+                <div id="image-container">
+                    </div>
+
+                <div id="options-container">
+                    </div>
+            </section>
+
+            <section id="feedback-and-score">
+                <div id="feedback-message"></div>
+                <div id="score-container">
+                    Pontuação: <span id="score">0</span>
                 </div>
+            </section>
 
-            <div id="options-container">
-                </div>
-        </section>
-
-        <section id="feedback-and-score">
-            <div id="feedback-message"></div>
-            <div id="score-container">
-                Pontuação: <span id="score">0</span>
-            </div>
-        </section>
-
-        <section id="completion-screen" class="hidden">
-            <h2>Parabéns! Você concluiu o jogo!</h2>
-            <p id="final-score-message"></p>
-            <button id="restart-button">Jogar Novamente</button>
-        </section>
+            <section id="completion-screen" class="hidden">
+                <h2>Parabéns! Você concluiu o jogo!</h2>
+                <p id="final-score-message"></p>
+                <button id="restart-button">Criar Novo Jogo</button>
+            </section>
+        </div>
     </main>
     <script src="script.js"></script>
 </body>
