@@ -247,7 +247,346 @@ body {
     padding: 1.2rem; /* Adjusted padding */
     background: rgba(255, 255, 255, 0.85);
     border-radius: 25px; /* Adjusted rounding */
-    backdrop-filter: blur(10px);
-    box-shadow: 0 10px 30px var(--shadow-medium);
-    border: 2px solid var(--primary-blue);
+    backdrop-filter: blur(8px);
+    box-shadow: inset 0 0 15px var(--shadow-light);
+    border: 3px solid var(--primary-green);
+}
+
+.option-button {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border: none;
+    border-radius: 20px;
+    padding: 1.5rem 1rem; /* Adjusted padding */
+    font-size: 1.3rem; /* Adjusted font size */
+    font-weight: 800;
+    font-family: var(--font-secondary);
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.2s;
+    box-shadow: 0 8px 0 var(--dark-primary-blue); /* Adjusted shadow depth */
+    letter-spacing: 0.8px;
+    position: relative;
+    overflow: hidden;
+    padding-left: 3rem; /* Space for icon */
+    text-align: left;
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Button Icon */
+.option-button::before {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px; /* Adjusted icon size */
+    height: 35px;
+    background-image: var(--img-button-icon);
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.95;
+    transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+    filter: drop-shadow(1px 1px 1px rgba(0,0,0,0.15)); /* Softer icon shadow */
+}
+
+.option-button:hover:not(:disabled) {
+    transform: translateY(-5px); /* Less pronounced lift */
+    box-shadow: 0 12px 0 var(--dark-primary-blue); /* Adjusted shadow depth */
+}
+
+.option-button:hover:not(:disabled)::before {
+    transform: translateY(-50%) rotate(20deg) scale(1.1); /* Slightly less exaggerated icon effect */
+    opacity: 1;
+}
+
+.option-button:active:not(:disabled) {
+    transform: translateY(2px); /* Less deep press */
+    box-shadow: 0 4px 0 var(--dark-primary-blue);
+}
+
+.option-button:active:not(:disabled)::before {
+    transform: translateY(-50%) scale(0.9);
+}
+
+.option-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    background-color: #E9ECEF;
+    box-shadow: 0 5px 0 #CFCFD0;
+}
+
+/* Correct/Incorrect States */
+.option-button.correct {
+    background-color: var(--primary-green);
+    box-shadow: 0 8px 0 var(--dark-primary-green);
+    animation: button-pop-pulse 0.7s cubic-bezier(0.17, 0.89, 0.32, 1.49);
+}
+
+.option-button.incorrect {
+    background-color: var(--primary-pink);
+    box-shadow: 0 8px 0 var(--dark-primary-pink);
+    animation: shake 0.6s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes button-pop-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.04); box-shadow: 0 10px 0 var(--dark-primary-green); } /* Slightly smaller pulse */
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 70% { transform: translateX(-6px); }
+    40%, 60% { transform: translateX(6px); }
+    50% { transform: translateX(-6px); }
+}
+
+/* --- Completion Modal --- */
+#completion-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 1;
+    transition: opacity 0.4s ease-in-out;
+    backdrop-filter: blur(12px); /* Slightly less blur */
+}
+
+#completion-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.modal-content {
+    background: linear-gradient(160deg, var(--primary-yellow), var(--primary-green));
+    padding: 3rem; /* Adjusted padding */
+    border-radius: 30px; /* Adjusted rounding */
+    text-align: center;
+    box-shadow: 0 20px 60px var(--shadow-strong); /* Softer shadow */
+    transform: scale(0.9);
+    animation: modal-pop-in 0.6s cubic-bezier(0.17, 0.89, 0.32, 1.49) forwards;
+    color: var(--text-dark);
+    border: 6px solid var(--primary-blue); /* Adjusted border thickness */
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes modal-pop-in {
+    0% { transform: translateY(-100px) scale(0.6); opacity: 0; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal-fun-element {
+    position: absolute;
+    background-image: var(--img-modal-element);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 150px; /* Adjusted size */
+    height: 150px;
+    bottom: -30px;
+    right: -30px;
+    transform: rotate(15deg);
+    opacity: 0.6;
+    z-index: -1;
+    filter: blur(3px); /* Less blur */
+    animation: bounce 1.5s infinite ease-in-out alternate;
+}
+
+#modal-emoji {
+    font-size: 6rem; /* Adjusted emoji size */
+    margin-bottom: 1.5rem;
+    animation: bounce 1s infinite alternate;
+}
+
+.modal-title {
+    font-size: 2.8rem; /* Adjusted title size */
+    font-weight: 900;
+    margin-top: 0.8rem;
+    font-family: var(--font-primary);
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.15);
+    color: var(--primary-purple);
+}
+
+#final-score {
+    font-size: 2rem; /* Adjusted score size */
+    color: var(--text-dark);
+    margin: 1.5rem 0 2.5rem;
+    font-weight: 700;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+#play-again-button {
+    background-color: var(--primary-blue);
+    color: var(--text-light);
+    border: none;
+    padding: 1.2rem 3rem; /* Adjusted padding */
+    font-size: 1.3rem; /* Adjusted font size */
+    font-family: var(--font-primary);
+    font-weight: 800;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.27, 1.55), box-shadow 0.2s;
+    box-shadow: 0 8px 0 var(--dark-primary-blue);
+}
+
+#play-again-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 0 var(--dark-primary-blue);
+}
+
+#play-again-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 4px 0 var(--dark-primary-blue);
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    #game-container {
+        margin: 0.8rem;
+        padding: 2rem;
+        max-width: 95%; /* Allow it to take more width on smaller screens */
+    }
+
+    #progress-container {
+        height: 18px;
+    }
+
+    #question-counter {
+        font-size: 1rem;
+    }
+
+    #emoji-display {
+        font-size: 6rem;
+        margin: 1rem 0;
+    }
+
+    #feedback-text {
+        font-size: 1.6rem;
+        min-height: 45px;
+        margin-bottom: 1.5rem;
+    }
+
+    #options-grid {
+        grid-template-columns: 1fr; /* Stack buttons on smaller screens */
+        gap: 1.2rem;
+        padding: 1rem;
+    }
+
+    .option-button {
+        font-size: 1.2rem;
+        padding: 1.2rem 0.8rem;
+        padding-left: 2.8rem;
+        box-shadow: 0 6px 0 var(--dark-primary-blue);
+    }
+
+    .option-button::before {
+        width: 30px;
+        height: 30px;
+        left: 0.8rem;
+    }
+    .option-button:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 0 var(--dark-primary-blue);
+    }
+    .option-button:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: 0 3px 0 var(--dark-primary-blue);
+    }
+
+    .modal-content {
+        padding: 2.5rem;
+        border-radius: 25px;
+        margin: 0.5rem;
+        border-width: 5px;
+    }
+
+    #modal-emoji {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    .modal-title {
+        font-size: 2.4rem;
+    }
+
+    #final-score {
+        font-size: 1.6rem;
+        margin: 1rem 0 2rem;
+    }
+
+    #play-again-button {
+        padding: 1rem 2.5rem;
+        font-size: 1.2rem;
+        box-shadow: 0 6px 0 var(--dark-primary-blue);
+    }
+
+    /* Adjust background shapes/sparkles for smaller screens */
+    .fun-shape {
+        width: 150px;
+        height: 150px;
+        filter: blur(6px);
+    }
+    .shape-top-left { top: -30px; left: -50px; }
+    .shape-bottom-right { bottom: -50px; right: -70px; }
+    .shape-middle-left { top: 35%; left: -30px; }
+    .modal-fun-element { width: 120px; height: 120px; bottom: -20px; right: -20px; }
+
+    .sparkle {
+        width: 6px; height: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    #game-container {
+        padding: 1.2rem;
+        border-radius: 20px;
+    }
+    #emoji-display {
+        font-size: 5rem;
+    }
+    #feedback-text {
+        font-size: 1.3rem;
+        min-height: 40px;
+    }
+    .option-button {
+        font-size: 1.1rem;
+        padding: 1rem 0.6rem;
+        padding-left: 2.5rem;
+    }
+    .option-button::before {
+        width: 25px;
+        height: 25px;
+        left: 0.6rem;
+    }
+    .modal-content {
+        padding: 1.8rem;
+        border-radius: 20px;
+    }
+    .modal-title {
+        font-size: 2rem;
+    }
+    #final-score {
+        font-size: 1.4rem;
+    }
+    #play-again-button {
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+    }
+    .fun-shape {
+        width: 120px;
+        height: 120px;
+        filter: blur(4px);
+    }
+    .modal-fun-element {
+        width: 90px;
+        height: 90px;
+    }
 }
